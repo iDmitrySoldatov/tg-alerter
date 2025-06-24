@@ -1,0 +1,4 @@
+telegram:
+  bot:
+    token: ${TELEGRAM_BOT_TOKEN}
+    chat-id: ${TELEGRAM_BOT_CHAT_ID}
