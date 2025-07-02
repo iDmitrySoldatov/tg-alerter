@@ -1,0 +1,43 @@
+name: deploy-prod
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: setup-jdk
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'corretto'
+
+      - name: build image
+        run: mvn spring-boot:build-image
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: extract version
+        id: version-extractor
+        uses: dostonhamrakulov/maven-artifact-version-extractor@v1.0
+        with:
+          file_path: ${{ github.workspace }}/pom.xml
+
+      - name: docker login
+        uses: docker/login-action@v3
+        with:
+          registry: docker.samurai-trading.ru
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASS }}
+
+      - name: docker push
+        run: docker push docker.samurai-trading.ru/tg-alerter:${{ steps.version-extractor.outputs.version }}
+
+      - uses: tale/kubectl-action@v1
+        with:
+          base64-kube-config: ${{ secrets.KUBE_CONFIG }}
+      - run: kubectl apply -f k8s/prod-deployment.yml

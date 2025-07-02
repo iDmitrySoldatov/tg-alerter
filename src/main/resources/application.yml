@@ -1,4 +1,21 @@
+spring:
+  rabbitmq:
+    host: ${RABBIT_HOST:localhost}
+    port: ${RABBIT_PORT:5672}
+    username: ${RABBITMQ_USER:test}
+
 telegram:
   bot:
     token: ${TELEGRAM_BOT_TOKEN}
-    chat-id: ${TELEGRAM_BOT_CHAT_ID}
+
+stage: ${STAGE:stage}
+
+integration:
+  orchestrator:
+    url: ${ORCHESTRATOR_URL:}
+
+logging:
+  level:
+    algo.trading: ${LOG_LEVEL:DEBUG}
+  pattern:
+    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} [${spring.application.name}] [%thread] [%X{identifier}] %-5level %logger{36} - %msg%n"

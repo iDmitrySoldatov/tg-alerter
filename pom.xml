@@ -19,13 +19,30 @@
         <prometheus.version>1.12.6</prometheus.version>
         <checkstyle.version>10.23.0</checkstyle.version>
         <telegram.version>9.0.0</telegram.version>
+        <alor.common.version>0.11</alor.common.version>
+        <spring-wiremock.version>4.2.0</spring-wiremock.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/iDmitrySoldatov/alor-broker-spring-boot-starter</url>
+        </repository>
+        <repository>
+            <id>github-common</id>
+            <url>https://maven.pkg.github.com/iDmitrySoldatov/trading-common</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <!--        spring            -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -56,16 +73,40 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+        <!--        algo trading       -->
+        <dependency>
+            <groupId>algo.trading</groupId>
+            <artifactId>trading-common</artifactId>
+            <version>${alor.common.version}</version>
+        </dependency>
         <!--        test              -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-contract-wiremock</artifactId>
+            <version>${spring-wiremock.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <imageName>docker.samurai-trading.ru/${project.name}:${project.version}</imageName>
+                    <image>
+                        <env>
+                            <BPE_LANG>C.UTF-8</BPE_LANG>
+                        </env>
+                    </image>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
