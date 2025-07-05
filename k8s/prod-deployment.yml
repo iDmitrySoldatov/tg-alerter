@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tg-alerter
+  name: trade-alerter
   namespace: prod
   labels:
-    app: tg-alerter
+    app: trade-alerter
 spec:
   replicas: 1
   strategy:
     type: "Recreate"
   selector:
     matchLabels:
-      app: tg-alerter
+      app: trade-alerter
   template:
     metadata:
       labels:
-        app: tg-alerter
+        app: trade-alerter
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/path: '/actuator/prometheus'
         prometheus.io/port: '8177'
     spec:
       containers:
-        - name: tg-alerter
+        - name: trade-alerter
           image: "docker.samurai-trading.ru/tg-alerter:1.0-SNAPSHOT"
           ports:
             - name: http
@@ -73,5 +73,15 @@ spec:
                 configMapKeyRef:
                   name: prod-config
                   key: orchestrator.url
+            - name: TELEGRAM_BOT_TOKEN
+              valueFrom:
+                configMapKeyRef:
+                  name: prod-config
+                  key: telegrambot.token
+            - name: STAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: prod-config
+                  key: stage.name
             - name: SERVER_PORT
               value: "8177"
