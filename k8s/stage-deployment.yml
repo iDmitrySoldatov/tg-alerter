@@ -76,7 +76,7 @@ spec:
             - name: TELEGRAM_BOT_TOKEN
               valueFrom:
                 configMapKeyRef:
-                  name: prod-config
+                  name: stage-config
                   key: telegrambot.token
             - name: SERVER_PORT
               value: "8077"
