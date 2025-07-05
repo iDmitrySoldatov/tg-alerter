@@ -62,12 +62,13 @@ public class TradingAlertBot implements AlertBot, SpringLongPollingBot {
    * @param message text to send
    */
   @Override
-  public void alert(String message) {
+  public void alert(String message, String chatId) throws TelegramApiException {
     try {
-      log.info("Sending alert message: {}", message);
-      client.execute(createSendMessage(message));
+      log.debug("Sending alert message: {}, to chatId: {}", message, chatId);
+      client.execute(createSendMessage(message, chatId));
     } catch (TelegramApiException exception) {
       log.error(exception.getMessage());
+      throw exception;
     }
   }
 
@@ -75,15 +76,11 @@ public class TradingAlertBot implements AlertBot, SpringLongPollingBot {
    * Creates SendMessage object with validation.
    *
    * @param message text content
+   * @param chatId chat id
    * @return prepared SendMessage
    * @throws FailBotStartingException if chatId is empty
    */
-  private SendMessage createSendMessage(String message) {
-    String chatId = properties.getChatId();
-    if (chatId == null || chatId.isEmpty()) {
-      log.error("ChatId is empty");
-      throw new FailBotStartingException("ChatId is empty");
-    }
+  private SendMessage createSendMessage(String message, String chatId) {
     return SendMessage.builder().chatId(chatId).text(message).build();
   }
 }

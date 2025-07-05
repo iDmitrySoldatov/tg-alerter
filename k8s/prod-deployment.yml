@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tg-alerter
+  namespace: prod
+  labels:
+    app: tg-alerter
+spec:
+  replicas: 1
+  strategy:
+    type: "Recreate"
+  selector:
+    matchLabels:
+      app: tg-alerter
+  template:
+    metadata:
+      labels:
+        app: tg-alerter
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/path: '/actuator/prometheus'
+        prometheus.io/port: '8177'
+    spec:
+      containers:
+        - name: tg-alerter
+          image: "docker.samurai-trading.ru/tg-alerter:1.0-SNAPSHOT"
+          ports:
+            - name: http
+              containerPort: 8177
+              protocol: TCP
+          livenessProbe:
+            initialDelaySeconds: 20
+            timeoutSeconds: 10
+            httpGet:
+              path: /actuator/health
+              port: http
+          readinessProbe:
+            initialDelaySeconds: 20
+            timeoutSeconds: 10
+            httpGet:
+              path: /actuator/health
+              port: http
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 1000Mi
+            requests:
+              cpu: 500m
+              memory: 500Mi
+          env:
+            - name: RABBIT_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: prod-config
+                  key: rabbit.host
+            - name: RABBIT_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: prod-config
+                  key: rabbit.port
+            - name: RABBITMQ_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: prod-config
+                  key: rabbit.user
+            - name: RABBITMQ_PASS
+              valueFrom:
+                configMapKeyRef:
+                  name: prod-config
+                  key: rabbit.password
+            - name: ORCHESTRATOR_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: prod-config
+                  key: orchestrator.url
+            - name: SERVER_PORT
+              value: "8177"
