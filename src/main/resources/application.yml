@@ -21,3 +21,13 @@ logging:
     algo.trading: ${LOG_LEVEL:DEBUG}
   pattern:
     console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} [${spring.application.name}] [%thread] [%X{identifier}] %-5level %logger{36} - %msg%n"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
