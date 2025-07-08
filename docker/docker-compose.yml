@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  rabbitmq:
+    image: docker.samurai-trading.ru/rabbitmq
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbit
+      RABBITMQ_DEFAULT_PASS: pw
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+volumes:
+  pg_data:
+    driver: local

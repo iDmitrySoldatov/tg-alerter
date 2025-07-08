@@ -1,0 +1,13 @@
+wiremock:
+  reset-mappings-after-each-test: true
+
+telegram:
+  bot:
+    token: fake-token
+    error-chat-id: error
+
+stage: ${STAGE:stage}
+
+integration:
+  orchestrator:
+    url: "http://localhost:${wiremock.server.port}"

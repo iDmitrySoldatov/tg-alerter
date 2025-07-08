@@ -1,0 +1,30 @@
+{
+  "strategyId": 12345,
+  "time": "2023-05-15T14:30:45Z",
+  "type": "ERROR",
+  "message": "Failed to execute market order: insufficient funds",
+  "order": {
+    "guid": "7a3e4b5c-6d7e-8f9a-1b2c-3d4e5f6a7b8c",
+    "strategyId": 12345,
+    "groupId": "group-789",
+    "openTrade": {
+      "tradeId": "trade-123",
+      "orderId": "order-456",
+      "price": 28500.00,
+      "commission": 14.25
+    },
+    "stopLossId": "sl-789",
+    "takeProfitId": "tp-012",
+    "closeTrade": {
+      "tradeId": "trade-456",
+      "orderId": "order-789",
+      "price": 28450.00,
+      "commission": 14.23
+    },
+    "orderSide": "SELL",
+    "stopLoss": 28000.00,
+    "takeProfit": 29000.00,
+    "result": -50.00
+  },
+  "state": "OPEN_ERROR"
+}
