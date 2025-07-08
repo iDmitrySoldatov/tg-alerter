@@ -1,13 +1,13 @@
 package algo.trading.tgalerter.service;
 
+import static algo.trading.tgalerter.util.FormatUtil.appendIfNotNull;
+import static algo.trading.tgalerter.util.FormatUtil.formatTime;
+
 import algo.trading.common.dto.StrategyEvent;
 import algo.trading.tgalerter.bot.TradingAlertBot;
 import algo.trading.tgalerter.integration.TradeOrchestratorIntegration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.common.util.StringUtils;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +18,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class EventService {
-  private static final DateTimeFormatter DATE_TIME_FORMATTER =
-      DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
   private final TradeOrchestratorIntegration tradeOrchestratorIntegration;
   private final TradingAlertBot tradingAlertBot;
   private final ObjectMapper objectMapper;
@@ -62,20 +60,5 @@ public class EventService {
     }
 
     return sb.toString();
-  }
-
-  private String formatTime(Instant time) {
-    if (time == null) {
-      return "null";
-    }
-    DateTimeFormatter formatter = DATE_TIME_FORMATTER.withZone(ZoneId.systemDefault());
-    return formatter.format(time);
-  }
-
-  // Вспомогательный метод для безопасного добавления полей
-  private void appendIfNotNull(StringBuilder sb, String label, Object value) {
-    if (value != null) {
-      sb.append(label).append(": ").append(value).append("\n");
-    }
   }
 }

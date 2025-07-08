@@ -8,4 +8,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "telegram.bot")
 public class TelegramBotProperties {
   private String token;
+  private String errorChatId;
 }

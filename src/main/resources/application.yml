@@ -8,6 +8,7 @@ spring:
 telegram:
   bot:
     token: ${TELEGRAM_BOT_TOKEN}
+    error-chat-id: ${ERROR_CHAT_ID}
 
 stage: ${STAGE:stage}
 

@@ -4,6 +4,7 @@ wiremock:
 telegram:
   bot:
     token: fake-token
+    error-chat-id: error
 
 stage: ${STAGE:stage}
 
