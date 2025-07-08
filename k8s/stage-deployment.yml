@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: trade-alerter
-          image: "docker.samurai-trading.ru/tg-alerter:1.3-SNAPSHOT"
+          image: "docker.samurai-trading.ru/tg-alerter:1.4-SNAPSHOT"
           ports:
             - name: http
               containerPort: 8077
@@ -44,6 +44,9 @@ spec:
             limits:
               cpu: 1000m
               memory: 1000Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
           env:
             - name: RABBIT_HOST
               valueFrom:
