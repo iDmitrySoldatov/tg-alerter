@@ -56,7 +56,7 @@ public class StrategyListenerTest extends BaseIntegrationTest {
     StrategyEvent strategyEvent = StrategyEvent.builder().strategyId(777L).build();
     ChatDto chatDto = ChatDto.builder().chatId("666").build();
     stubFor(
-        WireMock.get(urlEqualTo("/inner/strategy/777/chat"))
+        WireMock.get(urlEqualTo("/inner/strategy/777/info"))
             .willReturn(
                 aResponse()
                     .withHeader("Content-Type", "application/json")

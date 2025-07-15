@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: trade-alerter
-          image: "docker.samurai-trading.ru/tg-alerter:1.4-SNAPSHOT"
+          image: "docker.samurai-trading.ru/tg-alerter:1.5-SNAPSHOT"
           ports:
             - name: http
               containerPort: 8077

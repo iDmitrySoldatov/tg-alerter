@@ -4,6 +4,7 @@ import static algo.trading.tgalerter.util.FormatUtil.appendIfNotNull;
 import static algo.trading.tgalerter.util.FormatUtil.formatTime;
 
 import algo.trading.common.dto.StrategyEvent;
+import algo.trading.common.dto.StrategyInfo;
 import algo.trading.tgalerter.bot.TradingAlertBot;
 import algo.trading.tgalerter.integration.TradeOrchestratorIntegration;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,14 +27,14 @@ public class EventService {
   @SneakyThrows
   public void processEvent(StrategyEvent event) {
     log.debug("processEvent() - start: {}", event);
-    String chatId = tradeOrchestratorIntegration.getChat(event.getStrategyId()).getChatId();
-    String formattedEventMessage = formatEventMessage(event);
-    tradingAlertBot.alert(formattedEventMessage, chatId);
+    StrategyInfo strategyInfo = tradeOrchestratorIntegration.getStrategyInfo(event.getStrategyId());
+    String formattedEventMessage = formatEventMessage(event, strategyInfo);
+    tradingAlertBot.alert(formattedEventMessage, strategyInfo.getChatId());
     log.debug("processEvent() - end: {}", event);
   }
 
   @SneakyThrows
-  private String formatEventMessage(StrategyEvent event) {
+  private String formatEventMessage(StrategyEvent event, StrategyInfo strategyInfo) {
     if (event == null) {
       return "Null event received";
     }
@@ -46,6 +47,9 @@ public class EventService {
     appendIfNotNull(sb, "Strategy ID", event.getStrategyId());
     appendIfNotNull(sb, "Time", formatTime(event.getTime()));
     appendIfNotNull(sb, "State", event.getState());
+    appendIfNotNull(sb, "Symbol", strategyInfo.getSymbol());
+    appendIfNotNull(sb, "Timeframe", strategyInfo.getTimeframe());
+    appendIfNotNull(sb, "Exchange", strategyInfo.getExchange());
 
     // Сообщение (может быть null)
     if (StringUtils.isNotBlank(event.getMessage())) {
