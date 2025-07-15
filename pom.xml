@@ -12,14 +12,14 @@
 
     <groupId>algo.trading</groupId>
     <artifactId>tg-alerter</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.5-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
         <prometheus.version>1.12.6</prometheus.version>
         <checkstyle.version>10.23.0</checkstyle.version>
         <telegram.version>9.0.0</telegram.version>
-        <alor.common.version>0.11</alor.common.version>
+        <alor.common.version>0.13</alor.common.version>
         <spring-wiremock.version>4.2.0</spring-wiremock.version>
     </properties>
 

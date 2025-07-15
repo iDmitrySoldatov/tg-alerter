@@ -1,6 +1,6 @@
 package algo.trading.tgalerter.integration;
 
-import algo.trading.common.dto.ChatDto;
+import algo.trading.common.dto.StrategyInfo;
 import algo.trading.tgalerter.config.IntegrationProperty;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,7 @@ import org.springframework.web.client.RestClient;
 @Service
 @RequiredArgsConstructor
 public class TradeOrchestratorIntegration {
-  private static final String GET_CHAT_URL = "/inner/strategy/{strategyId}/chat";
+  private static final String GET_STRATEGY_INFO_URL = "/inner/strategy/{strategyId}/info";
 
   private final RestClient restClient;
   private final IntegrationProperty integrationProperty;
@@ -23,15 +23,15 @@ public class TradeOrchestratorIntegration {
    * @param strategyId ID of trading strategy
    * @return Chat DTO with communication details
    */
-  public ChatDto getChat(Long strategyId) {
-    log.debug("Get chat for strategy {}", strategyId);
-    ChatDto response =
+  public StrategyInfo getStrategyInfo(Long strategyId) {
+    log.debug("Get strategyInfo for strategy {}", strategyId);
+    StrategyInfo response =
         restClient
             .get()
-            .uri(integrationProperty.getOrchestrator().getUrl() + GET_CHAT_URL, strategyId)
+            .uri(integrationProperty.getOrchestrator().getUrl() + GET_STRATEGY_INFO_URL, strategyId)
             .retrieve()
-            .body(ChatDto.class);
-    log.debug("Get chat for strategy {}, response: {}", strategyId, response);
+            .body(StrategyInfo.class);
+    log.debug("Get strategyInfo for strategy {}, response: {}", strategyId, response);
     return response;
   }
 }
