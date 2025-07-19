@@ -22,12 +22,20 @@ public class EventService {
   private final TradeOrchestratorIntegration tradeOrchestratorIntegration;
   private final TradingAlertBot tradingAlertBot;
   private final ObjectMapper objectMapper;
+  private final EventSubscriptionManager eventSubscriptionManager;
 
   /** Method for strategy event processing. */
   @SneakyThrows
   public void processEvent(StrategyEvent event) {
     log.debug("processEvent() - start: {}", event);
     StrategyInfo strategyInfo = tradeOrchestratorIntegration.getStrategyInfo(event.getStrategyId());
+    if (!eventSubscriptionManager.isSubscribed(strategyInfo.getChatId(), event.getType())) {
+      log.debug(
+          "processEvent() - no subscribed on eventType: {} for chatId: {}",
+          event.getType(),
+          strategyInfo.getChatId());
+      return;
+    }
     String formattedEventMessage = formatEventMessage(event, strategyInfo);
     tradingAlertBot.alert(formattedEventMessage, strategyInfo.getChatId());
     log.debug("processEvent() - end: {}", event);
