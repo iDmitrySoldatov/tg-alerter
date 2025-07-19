@@ -11,17 +11,22 @@ public class MemoryEventSubscriptions implements EventSubscriptionManager {
   private final ConcurrentHashMap<String, Set<EventType>> storage = new ConcurrentHashMap<>();
 
   @Override
-  public void unsubscribe(String chatId, EventType eventType) {
+  public void subscribe(String chatId, EventType eventType) {
     storage.computeIfAbsent(chatId, k -> ConcurrentHashMap.newKeySet()).add(eventType);
   }
 
   @Override
-  public void subscribe(String chatId, EventType eventType) {
-    storage.computeIfAbsent(chatId, k -> ConcurrentHashMap.newKeySet()).remove(eventType);
+  public void unsubscribe(String chatId, EventType eventType) {
+    storage.computeIfPresent(
+        chatId,
+        (k, v) -> {
+          v.remove(eventType);
+          return v.isEmpty() ? null : v;
+        });
   }
 
   @Override
   public boolean isSubscribed(String chatId, EventType eventType) {
-    return !storage.getOrDefault(chatId, Set.of()).contains(eventType);
+    return storage.getOrDefault(chatId, Set.of()).contains(eventType);
   }
 }

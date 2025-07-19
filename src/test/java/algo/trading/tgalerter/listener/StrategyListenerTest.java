@@ -94,6 +94,8 @@ public class StrategyListenerTest extends BaseIntegrationTest {
                     .withHeader("Content-Type", "application/json")
                     .withBody(objectMapper.writeValueAsString(chatDto))));
 
+    eventSubscriptionManager.subscribe(chatDto.getChatId(), EventType.ACTION);
+
     // when
     strategyListener.processStrategyEvent(strategyEvent);
 
@@ -121,8 +123,6 @@ public class StrategyListenerTest extends BaseIntegrationTest {
                 aResponse()
                     .withHeader("Content-Type", "application/json")
                     .withBody(objectMapper.writeValueAsString(chatDto))));
-
-    eventSubscriptionManager.unsubscribe(chatDto.getChatId(), EventType.ACTION);
 
     // when
     strategyListener.processStrategyEvent(strategyEvent);
