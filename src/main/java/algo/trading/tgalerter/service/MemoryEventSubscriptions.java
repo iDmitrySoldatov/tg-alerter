@@ -8,16 +8,12 @@ import org.springframework.stereotype.Service;
 /** In-memory storage for event subscriptions. */
 @Service
 public class MemoryEventSubscriptions implements EventSubscriptionManager {
-  private final ConcurrentHashMap<String, Set<EventType>> storage = new ConcurrentHashMap<>();
+  private final ConcurrentHashMap<String, Set<EventType>> unsubscriptions =
+      new ConcurrentHashMap<>();
 
   @Override
   public void subscribe(String chatId, EventType eventType) {
-    storage.computeIfAbsent(chatId, k -> ConcurrentHashMap.newKeySet()).add(eventType);
-  }
-
-  @Override
-  public void unsubscribe(String chatId, EventType eventType) {
-    storage.computeIfPresent(
+    unsubscriptions.computeIfPresent(
         chatId,
         (k, v) -> {
           v.remove(eventType);
@@ -26,7 +22,12 @@ public class MemoryEventSubscriptions implements EventSubscriptionManager {
   }
 
   @Override
+  public void unsubscribe(String chatId, EventType eventType) {
+    unsubscriptions.computeIfAbsent(chatId, k -> ConcurrentHashMap.newKeySet()).add(eventType);
+  }
+
+  @Override
   public boolean isSubscribed(String chatId, EventType eventType) {
-    return storage.getOrDefault(chatId, Set.of()).contains(eventType);
+    return !unsubscriptions.getOrDefault(chatId, Set.of()).contains(eventType);
   }
 }
