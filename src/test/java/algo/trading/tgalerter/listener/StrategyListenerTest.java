@@ -72,7 +72,7 @@ public class StrategyListenerTest extends BaseIntegrationTest {
     Mockito.reset(tradingAlertBot);
     // Очищаем подписки через reflection
     if (eventSubscriptionManager instanceof MemoryEventSubscriptions) {
-      Field storageField = MemoryEventSubscriptions.class.getDeclaredField("storage");
+      Field storageField = MemoryEventSubscriptions.class.getDeclaredField("unsubscriptions");
       storageField.setAccessible(true);
       ConcurrentHashMap<?, ?> storage =
           (ConcurrentHashMap<?, ?>) storageField.get(eventSubscriptionManager);
@@ -94,8 +94,6 @@ public class StrategyListenerTest extends BaseIntegrationTest {
                     .withHeader("Content-Type", "application/json")
                     .withBody(objectMapper.writeValueAsString(chatDto))));
 
-    eventSubscriptionManager.subscribe(chatDto.getChatId(), EventType.ACTION);
-
     // when
     strategyListener.processStrategyEvent(strategyEvent);
 
@@ -116,6 +114,8 @@ public class StrategyListenerTest extends BaseIntegrationTest {
         StrategyEvent.builder().type(EventType.ACTION).strategyId(777L).build();
 
     ChatDto chatDto = ChatDto.builder().chatId("666").build();
+
+    eventSubscriptionManager.unsubscribe(chatDto.getChatId(), EventType.ACTION);
 
     stubFor(
         WireMock.get(urlEqualTo("/inner/strategy/777/info"))
